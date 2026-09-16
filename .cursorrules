@@ -1,0 +1,22 @@
+# Expense Tracker REST API - Repository Rules & Governance
+# Target Python Version: 3.11+ | Framework: FastAPI + SQLModel
+
+## 1. Domain Types & Precision
+- NEVER use standard Python `float` for currency amounts, balances, or transaction values.
+- ALWAYS use `decimal.Decimal` with 2 decimal places.
+- In split operations, the sum of split portions must equal the parent expense amount exactly. Any remainder cent goes to the first user.
+
+## 2. Architecture & Layering
+- Controllers/Routers (`src/api/routers/`) must ONLY handle HTTP requests, parameter validation, and status codes.
+- Business logic and database operations MUST live in `src/services/`.
+- Never write raw SQL strings; always use SQLModel's `select()` and `session.exec()`.
+- Use FastAPI dependency injection (`Depends(get_session)`) to supply the database session.
+
+## 3. Schemas & Models
+- Separate API request schemas (`*Create`, `*Update`) from database table models (`table=True`).
+- Never return internal database IDs or sensitive fields directly if prohibited by the spec.
+
+## 4. Quality & Typing
+- 100% type annotation coverage on all routes, parameters, and return types.
+- Strict `mypy` compliance is required: 0 errors allowed.
+- Follow PEP 8 via `ruff`.
